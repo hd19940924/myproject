@@ -29,7 +29,11 @@ def add_book(request):
 def show_books(request):
     response = {}
     try:
-        books = Book.objects.filter()
+        book_name = request.GET.get("book_name")
+        if (book_name):
+             books = Book.objects.filter(book_name=book_name)
+        else:
+              books = Book.objects.filter()
         response['list'] = json.loads(serializers.serialize("json", books))
         response['msg'] = 'success'
         response['error_num'] = 0
