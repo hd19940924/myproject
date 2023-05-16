@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.core import serializers
 from django.http import JsonResponse
+from django.db.models import Q
 import json
 from .models import Book
 # Create your views here.
@@ -15,7 +16,7 @@ def add_book(request):
     response = {}
     try:
         book = Book(book_name=request.GET.get('book_name'))
-        book.save()
+        book.save()#完成新增
         response['msg'] = 'success'
         response['error_num'] = 0
     except  Exception as e:
@@ -31,7 +32,7 @@ def show_books(request):
     try:
         book_name = request.GET.get("book_name")
         if (book_name):
-             books = Book.objects.filter(book_name=book_name)
+             books = Book.objects.filter(Q(book_name__icontains=book_name))#模糊查询
         else:
               books = Book.objects.filter()
         response['list'] = json.loads(serializers.serialize("json", books))
